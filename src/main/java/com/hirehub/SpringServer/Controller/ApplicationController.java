@@ -89,11 +89,11 @@ public class ApplicationController {
         return ResponseEntity.ok(response);
     }
 
-
-    @PostMapping("/apply/start")
-    public ResponseEntity<?> startApplication(
-            @RequestBody ApplicationRequest request
+    @PostMapping("/apply/submit")
+    public ResponseEntity<?> submitMcqAndApply(
+            @RequestBody McqSubmitRequest request
     ) {
+
         if (applicationService.hasAlreadyApplied(
                 request.getCandidateId(), request.getJobId())) {
             return ResponseEntity.badRequest()
@@ -105,24 +105,7 @@ public class ApplicationController {
 
         if (!"Eligible".equals(eligibility)) {
             return ResponseEntity.badRequest().body(eligibility);
-        }
-
-        return ResponseEntity.ok(
-                applicationService.getMcqsForScreening()
-        );
-    }
-
-    @PostMapping("/apply/submit")
-    public ResponseEntity<?> submitMcqAndApply(
-            @RequestBody McqSubmitRequest request
-    ) {
-        boolean passed = applicationService
-                .validateMcqs(request.getAnswers());
-
-        if (!passed) {
-            return ResponseEntity.badRequest()
-                    .body("MCQ test failed. All answers must be correct.");
-        }
+        }   
 
         Candidate candidate = candidateService
                 .getCandidateByUserId(request.getCandidateId())
@@ -174,6 +157,7 @@ public class ApplicationController {
                     candidateDTO.setCandidateId(candidate.getCandidateId());
                     candidateDTO.setUserId(candidate.getUser().getUserId());
                     candidateDTO.setFullName(candidate.getUser().getFullName());
+                    candidateDTO.setProfileImage(candidate.getUser().getProfileImage());
                     candidateDTO.setEmail(candidate.getUser().getEmail());
                     candidateDTO.setDegree(candidate.getDegree());
                     candidateDTO.setExperienceYears(candidate.getExperienceYears());

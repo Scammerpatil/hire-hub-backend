@@ -14,7 +14,4 @@ public interface ApplicationService {
     List<Application> getApplicationsByJob(Long jobId);
     boolean hasAlreadyApplied(Long candidateId, Long jobId);
     String isEligible(Long candidateId, Long jobId);
-
-    List<McqQuestionResponse> getMcqsForScreening();
-    boolean validateMcqs(List<McqAnswerRequest> answers);
 }

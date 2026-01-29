@@ -5,11 +5,9 @@ import com.hirehub.SpringServer.DTO.CompanyResponse;
 import com.hirehub.SpringServer.DTO.UserRequest;
 import com.hirehub.SpringServer.Entity.Company;
 import com.hirehub.SpringServer.Entity.JobPost;
-import com.hirehub.SpringServer.Entity.McqQuestion;
 import com.hirehub.SpringServer.Entity.User;
 import com.hirehub.SpringServer.Services.CompanyService;
 import com.hirehub.SpringServer.Services.JobPostService;
-import com.hirehub.SpringServer.Services.McqQuestionService;
 import com.hirehub.SpringServer.Services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,6 @@ public class AdminController {
     private final CompanyService companyService;
     private final JobPostService jobPostService;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final McqQuestionService mcqQuestionService;
 
     @PostMapping("/create-admin")
     public ResponseEntity<String> createAdmin(@RequestBody UserRequest request) {
@@ -117,38 +114,6 @@ public class AdminController {
         jobPostService.createJob(job);
 
         return ResponseEntity.ok("Job blocked successfully");
-    }
-
-    @GetMapping("/mcq/all")
-    public ResponseEntity<?> getAllMcqs() {
-        return ResponseEntity.ok(mcqQuestionService.getAllActive());
-    }
-
-    @PostMapping("/mcq/add")
-    public ResponseEntity<?> addMcq(@RequestBody McqQuestion question) {
-        return ResponseEntity.ok(mcqQuestionService.addQuestion(question));
-    }
-
-    @PutMapping("/mcq/update/{questionId}")
-    public ResponseEntity<?> updateMcq(
-            @PathVariable Long questionId,
-            @RequestBody McqQuestion question
-    ) {
-        return ResponseEntity.ok(
-                mcqQuestionService.updateQuestion(questionId, question)
-        );
-    }
-
-    @PutMapping("/mcq/block/{questionId}")
-    public ResponseEntity<String> blockMcq(@PathVariable Long questionId) {
-        mcqQuestionService.blockQuestion(questionId);
-        return ResponseEntity.ok("MCQ question blocked successfully");
-    }
-
-    @DeleteMapping("/mcq/delete/{questionId}")
-    public ResponseEntity<String> deleteMcq(@PathVariable Long questionId) {
-        mcqQuestionService.deleteQuestion(questionId);
-        return ResponseEntity.ok("MCQ question deleted permanently");
     }
 }
 

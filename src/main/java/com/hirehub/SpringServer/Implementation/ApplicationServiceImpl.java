@@ -1,13 +1,9 @@
 package com.hirehub.SpringServer.Implementation;
 
-import com.hirehub.SpringServer.DTO.McqAnswerRequest;
-import com.hirehub.SpringServer.DTO.McqQuestionResponse;
 import com.hirehub.SpringServer.Entity.Application;
 import com.hirehub.SpringServer.Entity.Candidate;
 import com.hirehub.SpringServer.Entity.JobPost;
-import com.hirehub.SpringServer.Entity.McqQuestion;
 import com.hirehub.SpringServer.Repository.ApplicationRepository;
-import com.hirehub.SpringServer.Repository.McqQuestionRepository;
 import com.hirehub.SpringServer.Services.ApplicationService;
 import com.hirehub.SpringServer.Services.CandidateService;
 import com.hirehub.SpringServer.Services.JobPostService;
@@ -25,7 +21,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final CandidateService candidateService;
     private final JobPostService jobPostService;
-    private final McqQuestionRepository mcqQuestionRepository;
 
     @Override
     public Application createApplication(Application application) {
@@ -51,24 +46,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     public boolean hasAlreadyApplied(Long candidateId, Long jobId) {
         return applicationRepository
                 .existsByCandidateCandidateIdAndJobJobId(candidateId, jobId);
-    }
-
-    @Override
-    public boolean validateMcqs(List<McqAnswerRequest> answers) {
-        System.out.println("Validating MCQ answers: " + answers);
-
-        for (McqAnswerRequest ans : answers) {
-            McqQuestion q = mcqQuestionRepository.findById(ans.getQuestionId())
-                    .orElseThrow(() ->
-                            new RuntimeException("Question not found: " + ans.getQuestionId())
-                    );
-            String correct = q.getCorrectOption() == null ? null : q.getCorrectOption().toString().trim();
-            String selected = ans.getSelectedOption() == null ? null : ans.getSelectedOption().toString().trim();
-            if (!java.util.Objects.equals(correct, selected)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @Override
@@ -139,20 +116,5 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
         return String.join("; ", errors);
-    }
-
-    @Override
-    public List<McqQuestionResponse> getMcqsForScreening() {
-        return mcqQuestionRepository.findRandomMcqs()
-                .stream()
-                .map(mcq -> new McqQuestionResponse(
-                        mcq.getQuestionId(),
-                        mcq.getQuestionText(),
-                        mcq.getOptionA(),
-                        mcq.getOptionB(),
-                        mcq.getOptionC(),
-                        mcq.getOptionD()
-                ))
-                .toList();
     }
 }
