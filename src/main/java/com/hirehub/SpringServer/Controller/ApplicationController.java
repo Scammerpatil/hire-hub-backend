@@ -91,7 +91,7 @@ public class ApplicationController {
 
     @PostMapping("/apply/submit")
     public ResponseEntity<?> submitMcqAndApply(
-            @RequestBody McqSubmitRequest request
+            @RequestBody JobApplicationRequest request
     ) {
 
         if (applicationService.hasAlreadyApplied(

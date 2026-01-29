@@ -1,7 +1,5 @@
 package com.hirehub.SpringServer.Services;
 
-import com.hirehub.SpringServer.DTO.McqAnswerRequest;
-import com.hirehub.SpringServer.DTO.McqQuestionResponse;
 import com.hirehub.SpringServer.Entity.Application;
 
 import java.util.List;
